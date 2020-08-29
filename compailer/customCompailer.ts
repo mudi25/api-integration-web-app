@@ -1,7 +1,5 @@
 import { Project, SyntaxKind, Decorator } from "ts-morph";
-import { join } from "path";
 import { TsKeyword } from "./tsType";
-import { readFileSync } from "fs";
 import * as brain from "brain.js";
 import { KtKeyword } from "./ktType";
 
@@ -43,9 +41,10 @@ export async function createModel(sourceCode: string): Promise<string> {
         (it): string =>
           `val ${it.getName()}: ${translate(
             it
-              .getNameNode()
-              .getType()
-              .getText(it)
+              .getText()
+              .replace(it.getName() + ":", "")
+              .replace(";", "")
+              .trim()
           )}`
       )
       .join(",\n");
@@ -145,7 +144,12 @@ export async function createController(sourceCode: string): Promise<string> {
           (it): IControllerParameter => ({
             decorator: "Body",
             name: it.getName(),
-            type: it.getType().getText(it)
+            type: it
+              .getText()
+              .replace("@Body()", "")
+              .replace(it.getName() + ":", "")
+              .replace(";", "")
+              .trim()
           })
         )
         .map(
@@ -173,23 +177,6 @@ export async function createController(sourceCode: string): Promise<string> {
         ": " +
         translate(child.getReturnType().getText(child));
       controllerMethod.push(method);
-      // sourceCodeKt = sourceCodeKt.concat(
-      //   "@",
-      //   translate(child.getDecorators()[0].getName()),
-      //   "(",
-      //   getMethodPath(controllerPath, child.getDecorators()),
-      //   ")\n"
-      // );
-      // sourceCodeKt = sourceCodeKt.concat(
-      //   "fun ",
-      //   child.getName(),
-      //   "(",
-      //   parameter,
-
-      //   ")",
-      //   ": ",
-      //   translate(child.getReturnType().getText(child))
-      // );
     });
     return mainController + "{\n" + controllerMethod.join("\n") + "\n}";
   } catch (error) {
