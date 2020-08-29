@@ -166,9 +166,7 @@ export async function createController(sourceCode: string): Promise<string> {
       const method =
         "\n@" +
         translate(child.getDecorators()[0].getName()) +
-        "(" +
-        getMethodPath(controllerPath, child.getDecorators()) +
-        ")\n" +
+        `("${getMethodPath(controllerPath, child.getDecorators())}")\n` +
         "fun " +
         child.getName() +
         "(" +
