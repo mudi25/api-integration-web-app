@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  app:
+    image: api-integration:version-1.0.0
+    container_name: api-integration-web-app
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - 127.0.0.1:3002:8080
