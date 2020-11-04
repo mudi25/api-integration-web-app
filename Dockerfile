@@ -1,7 +1,7 @@
 FROM node:12.18-alpine3.12 as build
 WORKDIR /app
 COPY . ./
-RUN apk add g++ make python && npm install && npm run build && npm prune --production
+RUN apk add g++ make python2 && npm install && npm run build && npm prune --production
 
 
 FROM node:12.18-alpine3.12
