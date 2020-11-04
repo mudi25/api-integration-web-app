@@ -1,9 +1,0 @@
-*
-!src 
-!proto 
-!package.json
-!tsconfig.json
-!tsconfig.build.json
-!nest-cli.json 
-!LICENSE
-!README.md
