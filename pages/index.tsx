@@ -9,7 +9,7 @@ export default function Home() {
     try {
       const file = event.target.files!![0];
       const reader = new FileReader();
-      reader.onload = async r => {
+      reader.onload = async (r) => {
         const tsSourceCode = r!!.target!!.result;
         if (typeof tsSourceCode === "string") {
           setTsSourceCode(tsSourceCode);
@@ -33,9 +33,9 @@ export default function Home() {
         method: "post",
         headers: {
           Accept: "application/json",
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
       const str = await res.text();
       setKtSourceCode(str);
@@ -54,9 +54,9 @@ export default function Home() {
         method: "post",
         headers: {
           Accept: "application/json",
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
       const str = await res.text();
       setKtSourceCode(str);
@@ -98,7 +98,7 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className={styles.footer}>
+      {/* <footer className={styles.footer}>
         <a
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
           target="_blank"
@@ -107,7 +107,7 @@ export default function Home() {
           Powered by{" "}
           <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
         </a>
-      </footer>
+      </footer> */}
     </div>
   );
 }

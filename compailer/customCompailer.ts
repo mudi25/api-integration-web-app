@@ -1,7 +1,5 @@
 import { Project, SyntaxKind, Decorator } from "ts-morph";
-import { TsKeyword } from "./tsType";
 import * as brain from "brain.js";
-import { KtKeyword } from "./ktType";
 
 interface IControllerParameter {
   name: string;
@@ -20,16 +18,16 @@ export async function createModel(sourceCode: string): Promise<string> {
     });
     const source = project.createSourceFile("./tmp/tmp.ts", sourceCode);
     const translate = (text: string): string => {
-      const value = TsKeyword.find(v => v.value === text);
-      if (value === undefined) {
-        return text;
-      }
-      const ktKey = net.run(value.key);
-      const ktValue = KtKeyword.find(v => v.key === ktKey);
-      if (ktValue) {
-        return ktValue.value;
-      }
-      return ktKey;
+      // const value = TsKeyword.find(v => v.value === text);
+      // if (value === undefined) {
+      //   return text;
+      // }
+      const value = net.run(text);
+      // const ktValue = KtKeyword.find(v => v.key === ktKey);
+      // if (ktValue) {
+      //   return ktValue.value;
+      // }
+      return value;
     };
 
     const interfaces = source.getChildrenOfKind(
@@ -50,7 +48,7 @@ export async function createModel(sourceCode: string): Promise<string> {
       .join(",\n");
     const sourceCodeKt: string = "";
     return sourceCodeKt.concat(
-      translate("interface"),
+      "data class",
       " ",
       interfaces.getName(),
       "(\n",
@@ -81,7 +79,7 @@ export async function createController(sourceCode: string): Promise<string> {
             : "";
         const mPath = path
           .split("/")
-          .map(it => {
+          .map((it) => {
             if (it.startsWith(":")) {
               return "{" + it.slice(1) + "}";
             }
@@ -106,7 +104,7 @@ export async function createController(sourceCode: string): Promise<string> {
           controllerPath === "" ? path : controllerPath + "/" + path;
         const mPath = xPath
           .split("/")
-          .map(it => {
+          .map((it) => {
             if (it.startsWith(":")) {
               return "{" + it.slice(1) + "}";
             }
@@ -118,28 +116,27 @@ export async function createController(sourceCode: string): Promise<string> {
       return controllerPath;
     };
     const translate = (text: string): string => {
-      const value = TsKeyword.find(v => v.value === text);
-      if (value === undefined) {
-        return text;
-      }
-      const ktKey = net.run(value.key);
-      const ktValue = KtKeyword.find(v => v.key === ktKey);
-      if (ktValue) {
-        return ktValue.value;
-      }
-      return ktKey;
+      // const value = TsKeyword.find((v) => v.value === text);
+      // if (value === undefined) {
+      //   return text;
+      // }
+      const value = net.run(text);
+      // const ktValue = KtKeyword.find((v) => v.key === ktKey);
+      // if (ktValue) {
+      //   return ktValue.value;
+      // }
+      return value;
     };
 
     const controller = source.getChildrenOfKind(SyntaxKind.ClassDeclaration)[0];
     const controllerPath = getControllerPath(controller.getDecorators());
-    const mainController =
-      translate("class") + " " + controller.getName() || "" + " ";
+    const mainController = "interface" + " " + controller.getName() || "" + " ";
 
     const controllerMethod: string[] = [];
-    controller.getMethods().forEach(child => {
+    controller.getMethods().forEach((child) => {
       const parameter = child
         .getParameters()
-        .filter(it => it.getDecorator("Body"))
+        .filter((it) => it.getDecorator("Body"))
         .map(
           (it): IControllerParameter => ({
             decorator: "Body",
@@ -149,11 +146,11 @@ export async function createController(sourceCode: string): Promise<string> {
               .replace("@Body()", "")
               .replace(it.getName() + ":", "")
               .replace(";", "")
-              .trim()
+              .trim(),
           })
         )
         .map(
-          it =>
+          (it) =>
             "@" +
             translate(it.decorator) +
             "()" +
