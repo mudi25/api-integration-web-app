@@ -151,12 +151,8 @@ export async function createController(sourceCode: string): Promise<string> {
         )
         .map(
           (it) =>
-            "@" +
-            translate(it.decorator) +
-            "()" +
-            it.name +
-            ": " +
-            translate(it.type)
+            "@" + translate(it.decorator) + "()" + it.name + ": " + it.type
+          // translate(it.type)
         )
         .join(",");
 
@@ -173,8 +169,8 @@ export async function createController(sourceCode: string): Promise<string> {
         parameter +
         ")" +
         ": " +
-        child.getReturnType().getText(child);
-      // translate(child.getReturnType().getText(child));
+        // child.getReturnType().getText(child);
+        translate(child.getReturnType().getText(child));
       controllerMethod.push(method);
     });
     return mainController + "{\n" + controllerMethod.join("\n") + "\n}";
