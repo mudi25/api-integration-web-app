@@ -173,7 +173,8 @@ export async function createController(sourceCode: string): Promise<string> {
         parameter +
         ")" +
         ": " +
-        translate(child.getReturnType().getText(child));
+        child.getReturnType().getText(child);
+      // translate(child.getReturnType().getText(child));
       controllerMethod.push(method);
     });
     return mainController + "{\n" + controllerMethod.join("\n") + "\n}";
